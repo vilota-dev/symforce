@@ -7,8 +7,8 @@
 
 #include <stdexcept>
 
-#include <fmt/format.h>
-#include <fmt/ostream.h>
+#include <spdlog/fmt/bundled/format.h>
+#include <spdlog/fmt/bundled/ostream.h>
 
 #include "./assert.h"
 #include "./values.h"
@@ -29,7 +29,7 @@ T Values<Scalar>::At(const index_entry_t& entry) const {
   const type_t type = StorageOps<T>::TypeEnum();
   if (entry.type != type) {
     throw std::runtime_error(
-        fmt::format("Mismatched types; index entry is type {}, T is {}", entry.type, type));
+        fmt::format("Mismatched types; index entry is type {}, T is {}", fmt::streamed(entry.type), fmt::streamed(type)));
   }
 
   // Construct the object

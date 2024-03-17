@@ -8,7 +8,7 @@
 #include <ostream>
 #include <vector>
 
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 
 #include "./factor.h"
 #include "./key.h"

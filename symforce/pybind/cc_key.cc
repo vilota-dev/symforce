@@ -5,8 +5,8 @@
 
 #include "./cc_key.h"
 
-#include <fmt/format.h>
-#include <fmt/ostream.h>
+#include <spdlog/fmt/bundled/format.h>
+#include <spdlog/fmt/bundled/ostream.h>
 
 #include <symforce/opt/key.h>
 
@@ -50,7 +50,7 @@ void AddKeyWrapper(py::module_ module) {
           "lexical_less_than", &sym::Key::LexicalLessThan,
           "Return true if a is LESS than b, in dictionary order of the tuple (letter, sub, super).")
       .def("__hash__", std::hash<sym::Key>{})
-      .def("__repr__", [](const sym::Key& key) { return fmt::format("{}", key); })
+      .def("__repr__", [](const sym::Key& key) { return fmt::format("{}", fmt::streamed(key)); })
       .def(py::pickle(
           [](const sym::Key& key) {  //  __getstate__
             return py::make_tuple(key.Letter(), key.Sub(), key.Super());

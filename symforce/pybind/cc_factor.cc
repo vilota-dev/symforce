@@ -9,8 +9,8 @@
 #include <functional>
 
 #include <Eigen/Core>
-#include <fmt/format.h>
-#include <fmt/ostream.h>
+#include <spdlog/fmt/bundled/format.h>
+#include <spdlog/fmt/bundled/ostream.h>
 #include <pybind11/eigen.h>
 #include <pybind11/functional.h>
 #include <pybind11/pybind11.h>
@@ -50,7 +50,7 @@ template <>
 void ThrowIfSparsityMismatch<Eigen::SparseMatrix<double>>(const py::object& matrix) {
   if (!py::isinstance(matrix, py::module_::import("scipy.sparse").attr("csc_matrix"))) {
     throw py::value_error(
-        fmt::format("scipy.sparse.csc_matrix expected, found {} instead.", py::type::of(matrix)));
+        fmt::format("scipy.sparse.csc_matrix expected, found {} instead.", fmt::streamed(py::type::of(matrix))));
   }
 }
 
@@ -223,7 +223,7 @@ void AddFactorWrapper(pybind11::module_ module) {
       .def("optimized_keys", &sym::Factord::OptimizedKeys,
            "Get the optimized keys for this factor.")
       .def("all_keys", &sym::Factord::AllKeys, "Get all keys required to evaluate this factor.")
-      .def("__repr__", [](const sym::Factord& factor) { return fmt::format("{}", factor); });
+      .def("__repr__", [](const sym::Factord& factor) { return fmt::format("{}", fmt::streamed(factor)); });
 }
 
 }  // namespace sym

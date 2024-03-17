@@ -12,47 +12,50 @@ include(FetchContent)
 # ------------------------------------------------------------------------------
 # fmtlib
 
-find_package(fmt 8...<9 QUIET)
-if (NOT fmt_FOUND)
-  message(STATUS "fmt not found, adding with FetchContent")
-  function(add_fmt)
-    set(FMT_INSTALL ON CACHE INTERNAL "fmt should create an install target")
-    FetchContent_Declare(
-      fmtlib
-      URL https://github.com/fmtlib/fmt/archive/8.0.1.zip
-      URL_HASH SHA256=6747442c189064b857336007dd7fa3aaf58512aa1a0b2ba76bf1182eefb01025
-    )
-    set(CMAKE_POSITION_INDEPENDENT_CODE True)
-    FetchContent_MakeAvailable(fmtlib)
-  endfunction()
+# find_package(fmt 8...<9 QUIET)
+# if (NOT fmt_FOUND)
+#   message(STATUS "fmt not found, adding with FetchContent")
+#   function(add_fmt)
+#     set(FMT_INSTALL ON CACHE INTERNAL "fmt should create an install target")
+#     FetchContent_Declare(
+#       fmtlib
+#       URL https://github.com/fmtlib/fmt/archive/8.0.1.zip
+#       URL_HASH SHA256=6747442c189064b857336007dd7fa3aaf58512aa1a0b2ba76bf1182eefb01025
+#     )
+#     set(CMAKE_POSITION_INDEPENDENT_CODE True)
+#     FetchContent_MakeAvailable(fmtlib)
+#   endfunction()
 
-  add_fmt()
-else()
-  message(STATUS "fmt found: ${fmt_VERSION}")
-endif()
+#   add_fmt()
+# else()
+#   message(STATUS "fmt found: ${fmt_VERSION}")
+# endif()
 
 # ------------------------------------------------------------------------------
 # spdlog
 
-find_package(spdlog 1.9...<1.11 QUIET)
-if (NOT spdlog_FOUND)
-  message(STATUS "spdlog not found, adding with FetchContent")
-  function(add_spdlog)
-    set(SPDLOG_INSTALL ON CACHE INTERNAL "spdlog should create an install target")
-    set(SPDLOG_FMT_EXTERNAL ON CACHE INTERNAL "spdlog shouldn't use its bundled fmtlib")
-    set(CMAKE_POSITION_INDEPENDENT_CODE True)
-    FetchContent_Declare(
-      spdlog
-      URL https://github.com/gabime/spdlog/archive/v1.9.2.zip
-      URL_HASH SHA256=130bd593c33e2e2abba095b551db6a05f5e4a5a19c03ab31256c38fa218aa0a6
-    )
-    FetchContent_MakeAvailable(spdlog)
-  endfunction()
+# find_package(spdlog 1.9...<1.11 QUIET)
+# if (NOT spdlog_FOUND)
+#   message(STATUS "spdlog not found, adding with FetchContent")
+#   function(add_spdlog)
+#     set(SPDLOG_INSTALL ON CACHE INTERNAL "spdlog should create an install target")
+#     set(SPDLOG_FMT_EXTERNAL ON CACHE INTERNAL "spdlog shouldn't use its bundled fmtlib")
+#     set(CMAKE_POSITION_INDEPENDENT_CODE True)
+#     FetchContent_Declare(
+#       spdlog
+#       URL https://github.com/gabime/spdlog/archive/v1.9.2.zip
+#       URL_HASH SHA256=130bd593c33e2e2abba095b551db6a05f5e4a5a19c03ab31256c38fa218aa0a6
+#     )
+#     FetchContent_MakeAvailable(spdlog)
+#   endfunction()
 
-  add_spdlog()
-else()
-  message(STATUS "spdlog found: ${spdlog_VERSION}")
-endif()
+#   add_spdlog()
+# else()
+#   message(STATUS "spdlog found: ${spdlog_VERSION}")
+# endif()
+
+set(SPDLOG_BUILD_SHARED OFF)
+add_subdirectory(../../../spdlog EXCLUDE_FROM_ALL ${CMAKE_CURRENT_BINARY_DIR}/spdlog)
 
 # ------------------------------------------------------------------------------
 # tl::optional
@@ -124,7 +127,8 @@ add_library(
 )
 target_compile_options(symforce_cholesky PRIVATE ${SYMFORCE_COMPILE_OPTIONS})
 target_link_libraries(symforce_cholesky
-  fmt::fmt
+  # fmt::fmt
+  spdlog::spdlog
   metis
   ${SYMFORCE_EIGEN_TARGET}
 )
@@ -145,7 +149,7 @@ target_compile_options(symforce_opt PRIVATE ${SYMFORCE_COMPILE_OPTIONS})
 target_link_libraries(symforce_opt
   symforce_gen
   symforce_cholesky
-  fmt::fmt
+  # fmt::fmt
   spdlog::spdlog
   tl::optional
   ${SYMFORCE_EIGEN_TARGET}
