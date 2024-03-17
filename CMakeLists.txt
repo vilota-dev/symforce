@@ -16,8 +16,9 @@ endif()
 
 project(symforce)
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # ==============================================================================
 # User-Configurable Options
@@ -28,9 +29,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(SYMFORCE_BUILD_OPT "Build symforce_opt and related targets for optimization" ON)
 option(SYMFORCE_BUILD_CC_SYM "Build cc_sym and related targets for python wrapping" ON)
-option(SYMFORCE_BUILD_EXAMPLES "Build the examples" ON)
-option(SYMFORCE_BUILD_TESTS "Build and run the tests" ON)
-option(SYMFORCE_ADD_PYTHON_TESTS "Include the Python tests" ON)
+option(SYMFORCE_BUILD_EXAMPLES "Build the examples" OFF)
+option(SYMFORCE_BUILD_TESTS "Build and run the tests" OFF)
+option(SYMFORCE_ADD_PYTHON_TESTS "Include the Python tests" OFF)
 option(SYMFORCE_BUILD_SYMENGINE "Build symengine[py]" ON)
 option(SYMFORCE_GENERATE_MANIFEST "Generate build manifest" ON)
 option(SYMFORCE_BUILD_BENCHMARKS "Generate examples for alternative libraries" OFF)
