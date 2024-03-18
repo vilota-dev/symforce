@@ -169,4 +169,5 @@ endif(SYMFORCE_CUSTOM_TIC_TOCS)
 
 install(TARGETS symforce_cholesky DESTINATION lib)
 install(TARGETS symforce_opt DESTINATION lib)
+set_target_properties(symforce_opt PROPERTIES INSTALL_RPATH "$ORIGIN/../lib" )
 install(DIRECTORY ./ DESTINATION include/symforce/opt FILES_MATCHING PATTERN "*.h" PATTERN "*.tcc")
