@@ -7,7 +7,7 @@
 
 #include <string>
 
-#include <fmt/format.h>
+#include <spdlog/fmt/fmt.h>
 
 namespace sym {
 

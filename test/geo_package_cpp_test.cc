@@ -20,6 +20,8 @@
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <spdlog/fmt/bundled/ostream.h>
+#include <spdlog/spdlog.h>
 
 #include <sym/pose2.h>
 #include <sym/pose3.h>

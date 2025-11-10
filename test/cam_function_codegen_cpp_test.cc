@@ -17,6 +17,8 @@
 #include <Eigen/Core>
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
+#include <spdlog/fmt/bundled/ostream.h>
+#include <spdlog/spdlog.h>
 
 // TODO(nathan): We just test linear camera for now, but could/should test other types in the future
 #include <sym/linear_camera_cal.h>

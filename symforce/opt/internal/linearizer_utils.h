@@ -9,8 +9,8 @@
 #include <tuple>
 #include <utility>
 
-#include <Eigen/SparseCore>
-#include <fmt/ranges.h>
+#include <Eigen/Sparse>
+#include <spdlog/fmt/bundled/ranges.h>
 #include <spdlog/spdlog.h>
 
 #include <lcmtypes/sym/linearization_dense_factor_helper_t.hpp>

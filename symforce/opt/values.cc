@@ -5,8 +5,8 @@
 
 #include "./values.h"
 
-#include <fmt/format.h>
-#include <fmt/ostream.h>
+#include <spdlog/fmt/bundled/format.h>
+#include <spdlog/fmt/bundled/ostream.h>
 
 #include "./assert.h"
 

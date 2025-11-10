@@ -21,7 +21,7 @@
 
 #pragma once
 
-#include <fmt/format.h>
+#include <spdlog/fmt/bundled/format.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 

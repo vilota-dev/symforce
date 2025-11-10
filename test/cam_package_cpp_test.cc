@@ -21,6 +21,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/generators/catch_generators.hpp>
 #include <catch2/generators/catch_generators_range.hpp>
+#include <spdlog/fmt/bundled/ostream.h>
+#include <spdlog/spdlog.h>
 
 #include <sym/atan_camera_cal.h>
 #include <sym/camera.h>
