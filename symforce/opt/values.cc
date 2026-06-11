@@ -214,7 +214,8 @@ index_t Values<Scalar>::CreateIndex(const std::vector<Key>& keys) const {
     const auto it = map_.find(key);
 
     if (it == map_.end()) {
-      throw std::runtime_error(fmt::format("Tried to create index for key {} not in values", key));
+      throw std::runtime_error(
+          fmt::format("Tried to create index for key {} not in values", fmt::streamed(key)));
     }
 
     const auto& entry = it->second;
@@ -237,7 +238,7 @@ template <typename Scalar>
 index_entry_t Values<Scalar>::IndexEntryAt(const Key& key) const {
   const auto it = map_.find(key);
   if (it == map_.end()) {
-    throw std::runtime_error(fmt::format("Key not found: {}", key));
+    throw std::runtime_error(fmt::format("Key not found: {}", fmt::streamed(key)));
   }
   return it->second;
 }
@@ -352,12 +353,13 @@ namespace {
 template <typename T>
 std::string FormatHelper(const type_t /* type */, const typename StorageOps<T>::Scalar* data_ptr,
                          const int32_t /* storage_dim */) {
-  return fmt::format("{}", StorageOps<T>::FromStorage(data_ptr));
+  return fmt::format("{}", fmt::streamed(StorageOps<T>::FromStorage(data_ptr)));
 }
 template <typename Scalar>
 std::string MatrixFormatHelper(const type_t type, const Scalar* data_ptr,
                                const int32_t storage_dim) {
-  return fmt::format("<{} {}>", type, Eigen::Map<const VectorX<Scalar>>(data_ptr, storage_dim));
+  return fmt::format("<{} {}>", static_cast<int>(type.value),
+                     fmt::streamed(Eigen::Map<const VectorX<Scalar>>(data_ptr, storage_dim)));
 }
 BY_TYPE_HELPER(FormatByType, FormatHelper, MatrixFormatHelper);
 
@@ -379,7 +381,7 @@ std::ostream& operator<<(std::ostream& os, const Values<Scalar>& v) {
 
   // Print each element
   for (const index_entry_t& entry : index.entries) {
-    fmt::print(os, " {} [{}:{}] --> {}\n", Key(entry.key), entry.offset,
+    fmt::print(os, " {} [{}:{}] --> {}\n", fmt::streamed(Key(entry.key)), entry.offset,
                entry.offset + entry.storage_dim,
                FormatByType<Scalar>(entry.type, entry.type, v.Data().data() + entry.offset,
                                     entry.storage_dim));

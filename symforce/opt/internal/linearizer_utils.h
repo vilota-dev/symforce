@@ -10,6 +10,7 @@
 #include <utility>
 
 #include <Eigen/Sparse>
+#include <spdlog/fmt/bundled/ostream.h>
 #include <spdlog/fmt/bundled/ranges.h>
 #include <spdlog/spdlog.h>
 
@@ -21,6 +22,17 @@
 
 namespace sym {
 namespace internal {
+
+inline std::string FormatKeys(const std::vector<Key>& keys) {
+  std::ostringstream ss;
+  for (std::size_t i = 0; i < keys.size(); ++i) {
+    if (i > 0) {
+      ss << ", ";
+    }
+    ss << keys[i];
+  }
+  return ss.str();
+}
 
 // Ordered map from (row, col) location in a dense matrix to a storage offset in a sparse matrix
 // Ordered by column then row, and only supports constructing with strictly increasing keys and size
@@ -279,7 +291,7 @@ std::pair<FactorHelperT, int> ComputeFactorHelper(
     spdlog::warn(
         "LM<{}>: Optimizing a factor that touches no optimized keys! Input keys for the factor "
         "are: {}",
-        linearizer_name, linearized_keys);
+        linearizer_name, FormatKeys(linearized_keys));
   }
 
   return helper_and_dimension;
@@ -313,22 +325,25 @@ void CheckLinearizedFactor(
       !linearized_factor.hessian.array().isFinite().all() ||
       !linearized_factor.rhs.array().isFinite().all()) {
     std::ostringstream ss;
-    fmt::print(ss, "LM<{}> Non-finite linearization for factor:\n{}\n", name, factor);
+    fmt::print(ss, "LM<{}> Non-finite linearization for factor:\n{}\n", name,
+               fmt::streamed(factor));
     for (const auto& index_entry : index_entry_cache) {
       auto d = std::vector<double>{};
       std::copy(values.Data().data() + index_entry.offset,
                 values.Data().data() + index_entry.offset + index_entry.storage_dim,
                 std::back_inserter(d));
 
-      fmt::print(ss, "  {} (offset={}, size={}) = {}\n", Key(index_entry.key), index_entry.offset,
-                 index_entry.storage_dim, d);
+      fmt::print(ss, "  {} (offset={}, size={}) = {}\n", fmt::streamed(Key(index_entry.key)),
+                 index_entry.offset, index_entry.storage_dim, d);
     }
 
     fmt::print(ss, "\n");
-    fmt::print(ss, "Residual:\n{}\n\n", linearized_factor.residual.transpose());
-    fmt::print(ss, "Jacobian:\n{}\n\n", MatrixX<Scalar>(linearized_factor.jacobian));
-    fmt::print(ss, "Hessian:\n{}\n\n", MatrixX<Scalar>(linearized_factor.hessian));
-    fmt::print(ss, "Rhs:\n{}\n", linearized_factor.rhs.transpose());
+    fmt::print(ss, "Residual:\n{}\n\n", fmt::streamed(linearized_factor.residual.transpose()));
+    fmt::print(ss, "Jacobian:\n{}\n\n",
+               fmt::streamed(MatrixX<Scalar>(linearized_factor.jacobian)));
+    fmt::print(ss, "Hessian:\n{}\n\n",
+               fmt::streamed(MatrixX<Scalar>(linearized_factor.hessian)));
+    fmt::print(ss, "Rhs:\n{}\n", fmt::streamed(linearized_factor.rhs.transpose()));
 
     spdlog::warn(ss.str());
   }
@@ -345,22 +360,25 @@ void CheckLinearizedFactor(
   if (!linearized_factor.residual.array().isFinite().all() ||
       !hessian_map.array().isFinite().all() || !linearized_factor.rhs.array().isFinite().all()) {
     std::ostringstream ss;
-    fmt::print(ss, "LM<{}> Non-finite linearization for factor:\n{}\n", name, factor);
+    fmt::print(ss, "LM<{}> Non-finite linearization for factor:\n{}\n", name,
+               fmt::streamed(factor));
     for (const auto& index_entry : index_entry_cache) {
       auto d = std::vector<double>{};
       std::copy(values.Data().data() + index_entry.offset,
                 values.Data().data() + index_entry.offset + index_entry.storage_dim,
                 std::back_inserter(d));
 
-      fmt::print(ss, "  {} (offset={}, size={}) = {}\n", Key(index_entry.key), index_entry.offset,
-                 index_entry.storage_dim, d);
+      fmt::print(ss, "  {} (offset={}, size={}) = {}\n", fmt::streamed(Key(index_entry.key)),
+                 index_entry.offset, index_entry.storage_dim, d);
     }
 
     fmt::print(ss, "\n");
-    fmt::print(ss, "Residual:\n{}\n\n", linearized_factor.residual.transpose());
-    fmt::print(ss, "Jacobian:\n{}\n\n", Eigen::SparseMatrix<Scalar>(linearized_factor.jacobian));
-    fmt::print(ss, "Hessian:\n{}\n\n", Eigen::SparseMatrix<Scalar>(linearized_factor.hessian));
-    fmt::print(ss, "Rhs:\n{}\n", linearized_factor.rhs.transpose());
+    fmt::print(ss, "Residual:\n{}\n\n", fmt::streamed(linearized_factor.residual.transpose()));
+    fmt::print(ss, "Jacobian:\n{}\n\n",
+               fmt::streamed(Eigen::SparseMatrix<Scalar>(linearized_factor.jacobian)));
+    fmt::print(ss, "Hessian:\n{}\n\n",
+               fmt::streamed(Eigen::SparseMatrix<Scalar>(linearized_factor.hessian)));
+    fmt::print(ss, "Rhs:\n{}\n", fmt::streamed(linearized_factor.rhs.transpose()));
 
     spdlog::warn(ss.str());
   }

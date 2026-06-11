@@ -278,7 +278,8 @@ void Linearizer<ScalarType>::BuildInitialLinearization(const Values<Scalar>& val
     for (const auto& key : keys_) {
       if (keys_touched_by_factors.count(key) == 0) {
         throw std::runtime_error(
-            fmt::format("Key {} is in the state vector but is not optimized by any factor.", key));
+            fmt::format("Key {} is in the state vector but is not optimized by any factor.",
+                        fmt::streamed(key)));
       }
     }
   }

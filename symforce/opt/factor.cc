@@ -6,6 +6,7 @@
 #include "./factor.h"
 
 #include <cassert>
+#include <sstream>
 
 #include <spdlog/fmt/bundled/format.h>
 #include <spdlog/fmt/bundled/ostream.h>
@@ -185,10 +186,25 @@ const std::vector<Key>& Factor<Scalar>::AllKeys() const {
 // Printing
 // ----------------------------------------------------------------------------
 
+namespace {
+
+std::string FormatKeys(const std::vector<Key>& keys) {
+  std::ostringstream ss;
+  for (std::size_t i = 0; i < keys.size(); ++i) {
+    if (i > 0) {
+      ss << ", ";
+    }
+    ss << keys[i];
+  }
+  return ss.str();
+}
+
+}  // namespace
+
 template <typename Scalar>
 std::ostream& operator<<(std::ostream& os, const sym::Factor<Scalar>& factor) {
-  fmt::print(os, "<Factor optimized keys: {{{}}}, all_keys: {{{}}}>", factor.OptimizedKeys(),
-             factor.AllKeys());
+  fmt::print(os, "<Factor optimized keys: {{{}}}, all_keys: {{{}}}>",
+             FormatKeys(factor.OptimizedKeys()), FormatKeys(factor.AllKeys()));
   return os;
 }
 
@@ -199,8 +215,9 @@ template std::ostream& operator<< <double>(std::ostream& os, const sym::Factor<d
 template <typename LinearizedFactorT>
 std::ostream& PrintLinearizedFactor(std::ostream& os, const LinearizedFactorT& factor) {
   fmt::print(os, "<{}\n tangent_dim: {}\n residual: ({})\n  jacobian: ({})\n  error: {}\n>\n",
-             factor.getTypeName(), factor.jacobian.cols(), factor.residual.transpose(),
-             factor.jacobian, 0.5 * factor.residual.squaredNorm());
+             factor.getTypeName(), factor.jacobian.cols(),
+             fmt::streamed(factor.residual.transpose()), fmt::streamed(factor.jacobian),
+             0.5 * factor.residual.squaredNorm());
   return os;
 }
 

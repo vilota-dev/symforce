@@ -29,8 +29,9 @@ T Values<Scalar>::At(const index_entry_t& entry) const {
   const type_t type = StorageOps<T>::TypeEnum();
   if (entry.type != type) {
     throw std::runtime_error(
-        fmt::format("Mismatched types; index entry for key {} is type {}, T is {}", fmt::streamed(entry.key),
-                    fmt::streamed(entry.type), fmt::streamed(type));
+        fmt::format("Mismatched types; index entry for key {} is type {}, T is {}",
+                    fmt::streamed(Key(entry.key)), static_cast<int>(entry.type.value),
+                    static_cast<int>(type.value)));
   }
 
   // By default, we allow types that have alignment requirements larger than sizeof(Scalar),
@@ -81,7 +82,7 @@ template <typename T>
 void Values<Scalar>::SetNew(const Key& key, T&& value) {
   const auto added = Set(key, std::forward<T>(value));
   if (!added) {
-    throw std::runtime_error(fmt::format("Key {} already exists", key));
+    throw std::runtime_error(fmt::format("Key {} already exists", fmt::streamed(key)));
   }
 }
 

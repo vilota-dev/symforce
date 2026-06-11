@@ -195,15 +195,10 @@ void DenseLinearizer<Scalar>::InitialLinearization(const Values<Scalar>& values,
     const std::vector<linearization_offsets_t>& key_offsets = factor_keyoffsets_.back();
 
     if (key_offsets.empty()) {
-      std::vector<key_t> input_keys;
-      for (const Key& key : factor.OptimizedKeys()) {
-        input_keys.push_back(key.GetLcmType());
-      }
-
       spdlog::warn(
           "LM<{}>: Optimizing a factor that touches no optimized keys! Optimized input keys for "
           "the factor are: {}",
-          name_, input_keys);
+          name_, internal::FormatKeys(factor.OptimizedKeys()));
     }
 
     internal::AssertConsistentShapes(tangent_dim, factor_linearization, include_jacobians_);
@@ -244,7 +239,8 @@ void DenseLinearizer<Scalar>::InitialLinearization(const Values<Scalar>& values,
     for (const auto& key : keys_) {
       if (keys_touched_by_factors.count(key) == 0) {
         throw std::runtime_error(
-            fmt::format("Key {} is in the state vector but is not optimized by any factor.", key));
+            fmt::format("Key {} is in the state vector but is not optimized by any factor.",
+                        fmt::streamed(key)));
       }
     }
   }

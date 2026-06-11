@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <spdlog/fmt/bundled/ostream.h>
 #include <spdlog/spdlog.h>
 
 #include "../util.h"
@@ -64,8 +65,8 @@ bool CheckDerivatives(LinearizerType& linearizer, const Values<Scalar>& values,
             "Symbolic Jacobian:\n{}\n"
             "Numerical Jacobian:\n{}\n"
             "Additive Difference:\n{}",
-            linearization.jacobian, numerical_jacobian,
-            linearization.jacobian - numerical_jacobian);
+            fmt::streamed(linearization.jacobian), fmt::streamed(numerical_jacobian),
+            fmt::streamed(linearization.jacobian - numerical_jacobian));
       }
 
       success = false;
@@ -88,7 +89,8 @@ bool CheckDerivatives(LinearizerType& linearizer, const Values<Scalar>& values,
             "Symbolic (sym::Linearizer) Hessian:\n{}\n"
             "Numerical (J^T * J) Hessian:\n{}\n"
             "Additive Difference:\n{}",
-            full_hessian, numerical_hessian, full_hessian - numerical_hessian);
+            fmt::streamed(full_hessian), fmt::streamed(numerical_hessian),
+            fmt::streamed(full_hessian - numerical_hessian));
       }
 
       success = false;
@@ -107,8 +109,8 @@ bool CheckDerivatives(LinearizerType& linearizer, const Values<Scalar>& values,
             "Symbolic (sym::Linearization) Jtb:\n{}\n"
             "Numerical (J^T * b) Jtb:\n{}\n"
             "Additive Difference:\n{}",
-            linearization.rhs.transpose(), numerical_rhs.transpose(),
-            linearization.rhs.transpose() - numerical_rhs.transpose());
+            fmt::streamed(linearization.rhs.transpose()), fmt::streamed(numerical_rhs.transpose()),
+            fmt::streamed((linearization.rhs.transpose() - numerical_rhs.transpose()).eval()));
       }
 
       success = false;

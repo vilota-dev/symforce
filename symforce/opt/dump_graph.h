@@ -8,7 +8,8 @@
 #include <ostream>
 #include <vector>
 
-#include <fmt/format.h>
+#include <spdlog/fmt/bundled/format.h>
+#include <spdlog/fmt/bundled/ostream.h>
 
 #include "./factor.h"
 #include "./key.h"
@@ -31,14 +32,14 @@ void DumpGraph(const std::string& name, const std::vector<Key>& keys,
                const std::vector<Factor<Scalar>>& factors, std::ostream& out) {
   fmt::print(out, "graph \"{}\" {{\n", name);
   for (const auto& key : keys) {
-    fmt::print(out, "  {};\n", key);
+    fmt::print(out, "  {};\n", fmt::streamed(key));
   }
 
   for (int i = 0; i < static_cast<int>(factors.size()); i++) {
     const auto& factor = factors[i];
     fmt::print(out, "  factor_{} [shape=point];\n", i);
     for (const auto& key : factor.OptimizedKeys()) {
-      fmt::print(out, "  {} -- factor_{};\n", key, i);
+      fmt::print(out, "  {} -- factor_{};\n", fmt::streamed(key), i);
     }
   }
 
