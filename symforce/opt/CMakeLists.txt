@@ -34,7 +34,7 @@ include(FetchContent)
 # ------------------------------------------------------------------------------
 # spdlog
 
-find_package(spdlog 1.9...<1.11 QUIET)
+find_package(spdlog 1.14)
 if (NOT spdlog_FOUND)
   message(FATAL_ERROR "spdlog not found. Please prebuild spdlog before proceeding.")
 else()
